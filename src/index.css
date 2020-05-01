@@ -1,13 +1,58 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
+  font-family: monospace;
 }
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.container{
+  text-align: center;
+  align-content: center;
+}
+.miss {
+  background-image: url("media/miss.png");
+  background-size: 30px 30px;
+}
+.hit {
+  background-image: url("media/hit.png");
+  background-size: cover;
+}
+.alive {
+  background-image: url("media/ship.png");
+  background-size: cover;
+}
+.cell {
+  background-color: #fff;
+  float: left;
+  font-size: 30px;
+  font-weight: bold;
+  margin-right: -1px;
+  margin-top: -1px;
+  padding: 0;
+  text-align: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid black;
+  display:  inline-block;
+  line-height: 30px;
+}
+.yourboard {
+  display: inline-flex;
+  flex-wrap: wrap;
+  width: 310px;
+  padding:40px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+.enemyboard {
+  display: inline-flex;
+  flex-wrap: wrap;
+  width: 310px;
+}
+.text {
+  width: 310px;
+  margin-top: 0px;
+  margin-bottom: 20px;
+  font-size: 30px;
+}
+.footer {
+  height: 80px;
 }
