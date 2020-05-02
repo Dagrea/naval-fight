@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import Early from './components/early';
 
 class App extends React.Component {
   constructor(props) {
@@ -14,7 +15,6 @@ class App extends React.Component {
   }
  
 	handleClick(index) {
-		
 		if(this.state.enemyBoard[index] == "hide") {
 			let newBoard = this.state.enemyBoard;
             newBoard[index] = "miss";
@@ -78,4 +78,4 @@ class App extends React.Component {
   }
 }
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<Early />, document.getElementById('root'));
