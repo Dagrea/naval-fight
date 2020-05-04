@@ -41,11 +41,11 @@ constructor(props) {
 				}
 			}
 			if (!this.around(ship,newBoard)) {newBoard = this.randomShip(size,newBoard);return newBoard}
-			newBoard[0][startOfShip] = startOfShip+" "+direction;
-			for (let i = 1; i < ship.length; i++) {
+			for (let i = 0; i < ship.length; i++) {
 				let firstChar = Number(ship[i].toString().slice(0,1));
 				let secondChar = Number(ship[i].toString().slice(-1));
-				newBoard[firstChar][secondChar] = startOfShip+" "+direction;
+				if (ship[i].toString().length === 1) {firstChar = 0}
+				newBoard[firstChar][secondChar] = ship[i];
 			}
 			return newBoard
 		}
@@ -65,113 +65,105 @@ constructor(props) {
 		}
 		if (!this.around(ship,newBoard)) {newBoard = this.randomShip(size,newBoard);return newBoard}
 		for (let i = 0; i < ship.length; i++) {
-			const firstChar = Number(ship[i].toString().slice(0,1));
-			const secondChar = Number(ship[i].toString().slice(-1));
-			newBoard[firstChar][secondChar] = startOfShip+" "+direction;
+			let firstChar = Number(ship[i].toString().slice(0,1));
+			let secondChar = Number(ship[i].toString().slice(-1));
+			newBoard[firstChar][secondChar] = ship[i];
 		}
 	    return newBoard
 	}
 
 	around(ship,newBoard) {
+		console.log(ship);
 		for (let i = 0; i < ship.length; i++) {
 			let current =  ship[i];
 			let firstChar = Number(current.toString().slice(0,1));
     		let lastChar = Number(current.toString().slice(-1));
-    		if (ship[i].length === 1) {}
-			if (ship[i].length === 1 && ship[i] === 0) {
+    		console.log(current,ship[i].toString().length);
+//-----------------------------------------------------------------------------------------------
+    		if (ship[i].toString().length === 1) {
+    			if (ship[i] === 0) {
+					for (let j = 0; j < 2; j++) {
+		      			for (let k = 0; k < 2; k++) {
+		      				let cur = current+j*10+k;
+		      				if (cur.toString().length === 1) {
+		      					firstChar = 0;
+		      				}
+		      				if (newBoard[firstChar+j][lastChar+k] != null) {
+		      					console.log("end1");return false
+		      				}
+		      				if (cur === current) {console.log("end2");continue}
+		      			}
+		      		}
+					console.log("end3");continue
+				}
+				if (ship[i] === 9) {
+					for (let j = 0; j < 2; j++) {
+		      			for (let k = -1; k < 1; k++) {
+		      				let cur = current+j*10+k;
+		      				if (cur.toString().length === 1) {
+		      					firstChar = 0;
+		      				}
+		      				if (newBoard[firstChar+j][lastChar+k] != null) {
+		      					console.log("end4");return false
+		      				}
+		      				if (cur === current) {console.log("end5");continue}
+		      			}
+		      		}
+					console.log("end6");continue
+				}
 				for (let j = 0; j < 2; j++) {
-	      			for (let k = 0; k < 2; k++) {
-	      				let cur = (firstChar+j)*10+(lastChar+k);
-	      				if (cur > 99) {continue}
-	      				if (newBoard[firstChar+j][lastChar+k] != null) {
-	      					return false
-	      				}
-	      				if (cur === current) {continue}
-	      			}
-	      		}
-				continue
-			}
-			if (ship[i].length === 1 && ship[i] === 9) {
-				for (let j = 0; j < 2; j++) {
-	      			for (let k = -1; k < 1; k++) {
-	      				let cur = (firstChar+j)*10+(lastChar+k);
-	      				if (cur > 99) {continue}
-	      				if (newBoard[firstChar+j][lastChar+k] != null) {
-	      					return false
-	      				}
-	      				if (cur === current) {continue}
-	      			}
-	      		}
-				continue
-			}
-    		if (ship[i].length === 1) {
-    			for (let j = 0; j < 2; j++) {
 	      			for (let k = -1; k < 2; k++) {
 	      				let cur = current+j*10+k;
-	      				if (cur.toString().length ===1) {
-	      					if (true) {}
+	      				if (cur.toString().length === 1) {
+	      					firstChar = 0;
 	      				}
 	      				if (newBoard[firstChar+j][lastChar+k] != null) {
-	      					return false
+	      					console.log("end7");return false
 	      				}
-	      				if (cur === current) {continue}
+	      				if (cur === current) {console.log("end8");continue}
 	      			}
 	      		}
-	      		continue
+	      		console.log("end9");continue
     		}
-//-----------------------------------------------------------------------------------------------
-			if (ship[i].length === 1) {
-    			for (let j = 0; j < 2; j++) {
-	      			for (let k = -1; k < 2; k++) {
-	      				let cur = (firstChar+j)*10+(lastChar+k);
-	      				if (cur > 99) {continue}
-	      				if (newBoard[firstChar+j][lastChar+k] != null) {
-	      					return false
-	      				}
-	      				if (cur === current) {continue}
-	      			}
-	      		}
-	      		continue
-    		}
-//-----------------------------------------------------------------------------------------------
 			if (lastChar === 0) {
 				for (let j = -1; j < 2; j++) {
 	      			for (let k = 0; k < 2; k++) {
 	      				let cur = (firstChar+j)*10+(lastChar+k);
-	      				if (cur > 99) {continue}
+	      				if (cur > 99) {console.log("end10");continue}
+	      				console.log(current,cur,firstChar,lastChar,j,k);
 	      				if (newBoard[firstChar+j][lastChar+k] != null) {
 	      					return false
 	      				}
-	      				if (cur === current) {continue}
+	      				if (cur === current) {console.log("end11");continue}
 	      			}
       			}
-      			continue
+      			console.log("end12");continue
 			}
 			if (lastChar === 9) {
 				for (let j = -1; j < 2; j++) {
 	      			for (let k = -1; k < 1; k++) {
 	      				let cur = (firstChar+j)*10+(lastChar+k);
-	      				if (cur > 99) {continue}
+	      				if (cur > 99) {console.log("end13");continue}
 	      				if (newBoard[firstChar+j][lastChar+k] != null) {
-	      					return false
+	      					console.log("end14");return false
 	      				}
-	      				if (cur === current) {continue}
+	      				if (cur === current) {console.log("end15");continue}
 	      			}
       			}
-      			continue
+      			console.log("end16");continue
 			}
 			for (let j = -1; j < 2; j++) {
       			for (let k = -1; k < 2; k++) {
       				let cur = (firstChar+j)*10+(lastChar+k);
-      				if (cur > 99) {continue}
+      				if (cur > 99) {console.log("end17");continue}
       				if (newBoard[firstChar+j][lastChar+k] != null) {
-      					return false
+      					console.log("end18");return false
       				}
-      				if (cur === current) {continue}
+      				if (cur === current) {console.log("end19");continue}
       			}
       		}
 		}
-		return true
+		console.log("end20");return true
 	}
 
 	randomPositioning() {
@@ -188,17 +180,6 @@ constructor(props) {
 	    	enemyBoard: newBoard,
 	    })
 	}
-
-
-
-
-
-
-
-
-
-
-
 //-----------------------------------------------------------------------------------------------  
  	render() {
     return (
