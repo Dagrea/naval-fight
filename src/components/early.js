@@ -3,119 +3,191 @@ export default class Early extends React.Component {
 constructor(props) {
     super(props)
     this.state = {
-      enemyBoard: Array(100).fill(null),
-      enemyShips: Array(100).fill(null),
+      enemyBoard: Array(10).fill(Array(10).fill(null)),
       ships: [4,3,3,2,2,2,1,1,1,1],
-      errLog:""
+      next:"battle"
     }
-    }
-
+}
   renderCells() {
-    return this.state.enemyBoard.map(
-      (cell, index) =>
-        <div className="cell" key={index}>
-          {cell} </div>
-    )
+      let board =[];
+      for (var j = 0; j < this.state.enemyBoard.length; j++) {
+        board[j] = (this.state.enemyBoard[j].map(
+          (cell,index) =>
+          <div className="cell " key={index}>{cell}</div>));
+      }
+      return board;
+  }
+  reset() {
+    this.setState({
+      enemyBoard: Array(10).fill(Array(10).fill(null)),
+      enemyShips: Array(100).fill(null),
+    })
+    }
+    
+  randomShip(size,newBoard) {
+    let startOfShip = Math.floor(Math.random()*100);
+    let direction = Math.floor(Math.random()*2);
+    if (startOfShip < 10 ) {
+      if (newBoard[0][startOfShip] != null) {newBoard = this.randomShip(size,newBoard);return newBoard}
+      if (direction === 1 && startOfShip > 10-size) {newBoard = this.randomShip(size,newBoard);return newBoard}
+      let ship = [];
+      for (let i = 0; i < size; i++) {
+        if (direction === 0) {
+              ship.push(startOfShip+10*i);
+        }
+        if (direction === 1) {
+          ship.push(startOfShip+i);
+        }
+      }
+      if (!this.around(ship,newBoard)) {newBoard = this.randomShip(size,newBoard);return newBoard}
+      for (let i = 0; i < ship.length; i++) {
+        let firstChar = Number(ship[i].toString().slice(0,1));
+        let secondChar = Number(ship[i].toString().slice(-1));
+        if (ship[i].toString().length === 1) {firstChar = 0}
+        newBoard[firstChar][secondChar] = ship[i];
+      }
+      return newBoard
+    }
+    let firstChar = Number(startOfShip.toString().slice(0,1));
+    let secondChar = Number(startOfShip.toString().slice(-1));
+    if (newBoard[firstChar][secondChar] != null) {newBoard = this.randomShip(size,newBoard);return newBoard}
+    if (direction === 0 &&  firstChar > 10-size) {newBoard = this.randomShip(size,newBoard);return newBoard}
+      if (direction === 1 &&  secondChar > 10-size) {newBoard = this.randomShip(size,newBoard);return newBoard}
+      let ship = [];
+    for (let i = 0; i < size; i++) {
+      if (direction === 0) {
+            ship.push(startOfShip+10*i);
+      }
+      if (direction === 1) {
+        ship.push(startOfShip+i);
+      }
+    }
+    if (!this.around(ship,newBoard)) {newBoard = this.randomShip(size,newBoard);return newBoard}
+    for (let i = 0; i < ship.length; i++) {
+      let firstChar = Number(ship[i].toString().slice(0,1));
+      let secondChar = Number(ship[i].toString().slice(-1));
+      newBoard[firstChar][secondChar] = ship[i];
+    }
+      return newBoard
   }
 
-// current.toString().slice(-1) - first char
-// current.toString().slice(-1) - last char console
-
-  around(current,newBoard) {
-    let firstChar = Number(current[0].toString().slice(0,1));
-    let lastChar = Number(current[0].toString().slice(-1));
-    console.log("cur "+current[0]+" first "+firstChar+" last "+lastChar);
-    for (var j = -1; j < 2; j++) {
-      for (var k = -1; k < 2; k++) {
-//-----------------------------------------------------------------------------------------------        
-        if (firstChar == 0 && j == -1) {
-          return false
+  around(ship,newBoard) {
+    for (let i = 0; i < ship.length; i++) {
+      let current =  ship[i];
+      let firstChar = Number(current.toString().slice(0,1));
+        let lastChar = Number(current.toString().slice(-1));
+        if (ship[i].toString().length === 1) {
+          if (ship[i] === 0) {
+          for (let j = 0; j < 2; j++) {
+                for (let k = 0; k < 2; k++) {
+                  let cur = current+j*10+k;
+                  if (cur.toString().length === 1) {
+                    firstChar = 0;
+                  }
+                  if (newBoard[firstChar+j][lastChar+k] != null) {
+                    return false
+                  }
+                  if (cur === current) {continue}
+                }
+              }
+          continue
         }
-        if (lastChar == 9 && j == 1) {
-          return false
+        if (ship[i] === 9) {
+          for (let j = 0; j < 2; j++) {
+                for (let k = -1; k < 1; k++) {
+                  let cur = current+j*10+k;
+                  if (cur.toString().length === 1) {
+                    firstChar = 0;
+                  }
+                  if (newBoard[firstChar+j][lastChar+k] != null) {
+                    return false
+                  }
+                  if (cur === current) {continue}
+                }
+              }
+          continue
         }
-//-----------------------------------------------------------------------------------------------
-        let cur = (firstChar+j)*10 + (lastChar+k);
-        if (current[0].toString().length == 1) {cur = firstChar}
-        if (newBoard[cur] != null) {
-          console.log("wrong");
-          return false
+        for (let j = 0; j < 2; j++) {
+              for (let k = -1; k < 2; k++) {
+                let cur = current+j*10+k;
+                if (cur.toString().length === 1) {
+                  firstChar = 0;
+                }
+                if (newBoard[firstChar+j][lastChar+k] != null) {
+                  return false
+                }
+                if (cur === current) {continue}
+              }
+            }
+            continue
         }
-        console.log("ship "+current+" current "+current[0]+" cur "+cur+" length "+current[0].toString().length)
-        if (cur < 0 || cur > 99) {continue}
-        if (cur == current[0]) {continue}
-        console.log("ship "+current+" current "+current[0]+" cur "+cur+" length "+current[0].toString().length)
+      if (lastChar === 0) {
+        for (let j = -1; j < 2; j++) {
+              for (let k = 0; k < 2; k++) {
+                let cur = (firstChar+j)*10+(lastChar+k);
+                if (cur > 99) {continue}
+                if (newBoard[firstChar+j][lastChar+k] != null) {
+                  return false
+                }
+                if (cur === current) {continue}
+              }
+            }
+            continue
       }
-    } 
-    console.log("yes")
+      if (lastChar === 9) {
+        for (let j = -1; j < 2; j++) {
+              for (let k = -1; k < 1; k++) {
+                let cur = (firstChar+j)*10+(lastChar+k);
+                if (cur > 99) {continue}
+                if (newBoard[firstChar+j][lastChar+k] != null) {
+                  return false
+                }
+                if (cur === current) {continue}
+              }
+            }
+            continue
+      }
+      for (let j = -1; j < 2; j++) {
+            for (let k = -1; k < 2; k++) {
+              let cur = (firstChar+j)*10+(lastChar+k);
+              if (cur > 99) {continue}
+              if (newBoard[firstChar+j][lastChar+k] != null) {
+                return false
+              }
+              if (cur === current) {continue}
+            }
+          }
+    }
     return true
   }
 
-  randomPosition(size,direction,newBoard) {
-    console.log("cd "+size+' '+direction);
-    let ship = [Math.floor(Math.random()*100)];
-    let firstChar = Number(ship[0].toString().slice(0,1));
-    let lastChar = Number(ship[0].toString().slice(-1));   
-    if (newBoard[ship[0]] != null) {ship = this.randomPosition(size,direction,newBoard)}
-    if (direction == 0 && lastChar > 10-size) {ship = this.randomPosition(size,direction,newBoard)}
-    if (direction == 1 && firstChar > 10-size && ship[0]>9) {ship = this.randomPosition(size,direction,newBoard)}    
-    for (var i = 1; i < size; i++) {
-      if (direction == 0) {
-       ship.push(ship[0]+i);
-      } 
-      else if (direction == 1) {
-       let cur = (firstChar+i)*10 + (lastChar);
-       if (ship[0].toString().length == 1) {cur = firstChar*i*10}
-       ship.push(cur);
-      }
-    }
-    if (this.around(ship,newBoard) == false) {ship = this.randomPosition(size,direction,newBoard)}  
-    return ship
-  }
-
   randomPositioning() {
-    let newBoard = Array(100).fill(null);
+    let newBoard = [];
+    for (let i = 0; i < 10; i++) {
+      newBoard.push(Array(10).fill(null));
+    }
     let b = 0;
-    for (var i = 0; i < this.state.ships.length; i++) {
-      let direction = Math.floor(Math.random()*2);
-      let currentShip = this.randomPosition(this.state.ships[i],direction,newBoard);
-      for (var i = 0; i < currentShip.length; i++) {
-       //newBoard[currentShip[i]] = this.state.ships[b] + " "+ direction; 
-      }
-      newBoard[currentShip[0]] = this.state.ships[b] + " "+ direction;
-      b++;
+    for (let i = 0; i < 10; i++) {
+      newBoard = this.randomShip(this.state.ships[b],newBoard);
+      b++
     }
     this.setState({
-      enemyBoard: newBoard,
-     })
+        enemyBoard: newBoard,
+      })
   }
 
-  kekw() {
-    this.setState({
-      enemyBoard: Array(100).fill(null),
-      enemyShips: Array(100).fill(null),
-    },this.randomPositioning)
-  }
-
-  reset() {
-    this.setState({
-      enemyBoard: Array(100).fill(null),
-      enemyShips: Array(100).fill(null),
-    })
-  }
-
-render() {
+  render() {
     return (
-      <div className="container">
+        <div className="wrapper">
         <h1>Random Numb App</h1>
         <div className="yourboard">
-        <button onClick={() => this.kekw()}>Random</button>
+        <button onClick={() => this.randomPositioning()}>Random</button>
         <button onClick={() => this.reset()}>Reset</button>
-        <div className="text">some</div>
+        <button onClick={() => {this.props.sendBoard(this.state.next,this.state.enemyBoard)}}>Battle</button>
         <div> {this.renderCells()} </div>
         </div>
         <div className="footer"></div>
-      </div>
+        </div>
     );
   }
 }

@@ -1,16 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import Early from './components/early2';
+import Early from './components/early';
+import Battle from './components/battle.js';
 
 class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      yourBoard: Array(100).fill("hide"),
+      yourBoard: Array(10).fill(Array(10).fill(null)),
       enemyBoard: Array(100).fill("hide"),
-      yourShips: Array(100).fill(null),
-      enemyShips: Array(100).fill(null)
+      log: "В ожидании вашего хода",
+      scene: "early"
     }
   }
  
@@ -47,6 +48,13 @@ class App extends React.Component {
     )
   }
 
+  sendBoard = (next,board) => {
+  	this.setState({
+  		scene: next,
+  		yourBoard: board
+  	})
+  }
+
   renderECells() {
     return this.state.enemyBoard.map(
       (cell, index) =>
@@ -61,21 +69,13 @@ class App extends React.Component {
   }
 
   render() {
+  	let scene = this.state.scene === "early" ? true : false;
     return (
-      <div className="container">
-        <h1>Naval Battle App</h1>
-        <div className="yourboard">
-        <div className="text">Ваша доска</div>
-          {this.renderYCells()}
-        </div>
-        <div className="enemyboard">
-        <div className="text">Доска противника</div>
-          {this.renderECells()}
-        </div>
-        <div className="footer"></div>
-      </div>
+    <div className="container">
+      {scene ? <Early sendBoard={this.sendBoard}/> : <Battle yBoard={this.state.yourBoard}/>}
+    </div>
     );
   }
 }
 
-ReactDOM.render(<Early />, document.getElementById('root'));
+ReactDOM.render(<App />, document.getElementById('root'));
