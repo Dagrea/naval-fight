@@ -3,6 +3,7 @@ export default class Early extends React.Component {
 constructor(props) {
     super(props)
     this.state = {
+      yourBoard: Array(10).fill(Array(10).fill(null)),
       enemyBoard: Array(10).fill(Array(10).fill(null)),
       ships: [4,3,3,2,2,2,1,1,1,1],
       next:"battle"
@@ -10,17 +11,19 @@ constructor(props) {
 }
   renderCells() {
       let board =[];
-      for (var j = 0; j < this.state.enemyBoard.length; j++) {
-        board[j] = (this.state.enemyBoard[j].map(
+      for (var j = 0; j < this.state.yourBoard.length; j++) {
+        board[j] = (this.state.yourBoard[j].map(
           (cell,index) =>
-          <div className="cell " key={index}>{cell}</div>));
+          this.state.enemyBoard[j][index] === "hide" ? 
+          <div className="cell alive" key={index} ></div> :
+          <div className="cell " key={index}></div>))
       }
       return board;
   }
   reset() {
     this.setState({
       enemyBoard: Array(10).fill(Array(10).fill(null)),
-      enemyShips: Array(100).fill(null),
+      yourBoard: Array(10).fill(Array(10).fill(null))
     })
     }
     
@@ -44,7 +47,7 @@ constructor(props) {
         let firstChar = Number(ship[i].toString().slice(0,1));
         let secondChar = Number(ship[i].toString().slice(-1));
         if (ship[i].toString().length === 1) {firstChar = 0}
-        newBoard[firstChar][secondChar] = ship[i];
+        newBoard[firstChar][secondChar] = "hide";
       }
       return newBoard
     }
@@ -66,7 +69,7 @@ constructor(props) {
     for (let i = 0; i < ship.length; i++) {
       let firstChar = Number(ship[i].toString().slice(0,1));
       let secondChar = Number(ship[i].toString().slice(-1));
-      newBoard[firstChar][secondChar] = ship[i];
+      newBoard[firstChar][secondChar] = "hide";
     }
       return newBoard
   }
@@ -162,18 +165,28 @@ constructor(props) {
   }
 
   randomPositioning() {
-    let newBoard = [];
+    let newBoard1 = [];
     for (let i = 0; i < 10; i++) {
-      newBoard.push(Array(10).fill(null));
+      newBoard1.push(Array(10).fill(null));
     }
     let b = 0;
     for (let i = 0; i < 10; i++) {
-      newBoard = this.randomShip(this.state.ships[b],newBoard);
-      b++
+      newBoard1 = this.randomShip(this.state.ships[b],newBoard1);
+      b++;
+    }
+    let newBoard2 = [];
+    for (let i = 0; i < 10; i++) {
+      newBoard2.push(Array(10).fill(null));
+    }
+    b = 0;
+    for (let i = 0; i < 10; i++) {
+      newBoard2 = this.randomShip(this.state.ships[b],newBoard2);
+      b++;
     }
     this.setState({
-        enemyBoard: newBoard,
-      })
+      yourBoard: newBoard1,
+      enemyBoard: newBoard2
+    })
   }
 
   render() {
@@ -183,7 +196,7 @@ constructor(props) {
         <div className="yourboard">
         <button onClick={() => this.randomPositioning()}>Random</button>
         <button onClick={() => this.reset()}>Reset</button>
-        <button onClick={() => {this.props.sendBoard(this.state.next,this.state.enemyBoard)}}>Battle</button>
+        <button onClick={() => {this.props.sendBoard(this.state.next,this.state.yourBoard,this.state.enemyBoard)}}>Battle</button>
         <div> {this.renderCells()} </div>
         </div>
         <div className="footer"></div>
