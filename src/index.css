@@ -7,6 +7,16 @@ body {
   text-align: center;
   align-content: center;
 }
+.log-container {
+  text-align: center;
+  align-content: center;
+  height: 40px;
+  font-size: 18px;
+}
+.log {
+  display:  inline-block;
+  width: 200px;
+}
 .miss {
   background-image: url("media/miss.png");
   background-size: 30px 30px;
