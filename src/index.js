@@ -25,12 +25,18 @@ class App extends React.Component {
   	})
   }
 
+  toStart = () => {
+    this.setState({
+      scene: "early"
+    })
+  }
+
   render() {
   	let scene = this.state.scene === "early" ? true : false;
     return (
     <div className="container">
       {scene ? <Early sendBoard={this.sendBoard}/> : <Battle yBoard={this.state.yourBoard} 
-      eBoard={this.state.enemyBoard} emBoard={this.state.emptyBoard}/>}
+      eBoard={this.state.enemyBoard} emBoard={this.state.emptyBoard} toStart={this.toStart}/>}
     </div>
     );
   }

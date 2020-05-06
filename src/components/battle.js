@@ -2,14 +2,18 @@ import React from 'react';
 class Logs extends React.Component{
   constructor(props) {
     super(props)
+    this.state = {
+      next:"early"
+    }
   }
   render() {
     let winCheck = (this.props.score[0] == 10 || this.props.score[1] == 10) ;
     let winner = this.props.score[0] == 10 ?  "You win!" : "Computer win!";
+    let lets = this.props.score[0] == 10 ? "do" : "try";
 
     return(
       winCheck ?
-      <div className="log-container">{winner}</div> :
+      <div className="log-container">{winner}   <button onClick={() => {this.props.toStart()}}> Let's {lets} it again</button></div> :
       (<div className="log-container"><div className="log">Сбитые корабли: {this.props.score[1]}</div>
        <div className="log">Сбитые корабли: {this.props.score[0]}</div></div>)
       )
@@ -23,7 +27,8 @@ constructor(props) {
       yourBoard: this.props.yBoard,
       enemyBoard: this.props.eBoard,
       enemyShots: [],
-      score: [0,0]
+      score: [0,0],
+      next:"early"
     }
 }
 
@@ -296,7 +301,7 @@ constructor(props) {
     return (
       <div className="wrapper">
         <h1>Naval Battle App</h1>
-        <Logs score={this.state.score} />
+        <Logs score={this.state.score} toStart={this.props.toStart}/>
         <div className="yourboard">
           <div className="text">Ваша доска</div>
           {this.renderYCells()}
