@@ -17,6 +17,14 @@ body {
   display:  inline-block;
   width: 200px;
 }
+.early-buttons {
+  display: flex;
+  justify-content: space-evenly;
+  width: 310px;
+  height: 25px;
+  font-size: 18px;
+  padding-bottom: 20px;
+}
 .miss {
   background-image: url("media/miss.png");
   background-size: 30px 30px;

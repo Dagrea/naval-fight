@@ -188,8 +188,10 @@ constructor(props) {
         <div className="wrapper">
         <h1>Random Numb App</h1>
         <div className="yourboard">
-        <button onClick={() => this.randomPositioning()}>Random</button>
-        <button onClick={() => {this.props.sendBoard(this.state.next,this.state.yourBoard,this.state.enemyBoard)}}>Battle</button>
+        <div className="early-buttons">
+          <button onClick={() => this.randomPositioning()}>Random</button>
+          <button onClick={() => {this.props.sendBoard(this.state.next,this.state.yourBoard,this.state.enemyBoard)}}>Battle</button>
+        </div>
         <div> {this.renderCells()} </div>
         </div>
         <div className="footer"></div>
